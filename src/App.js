@@ -1,8 +1,10 @@
+import React from 'react';
+import Task from './pages/Task';
 
-function App() {
+function App () {
   return (
     <div>
-     
+      <Task />
     </div>
   );
 }
