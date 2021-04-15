@@ -1,39 +1,62 @@
 import ACTION_TYPES from '../actions/actionTypes';
 
 const initialState = {
-  tasks: [
-    {
-      id: 0,
-      body: 'test task',
-      isDone: false,
-    },
-  ],
+  tasks: [],
+  isFetching: false,
+  error: null,
 };
-
-let serial = 1;
 
 function reducer (state = initialState, action) {
   switch (action.type) {
-    case ACTION_TYPES.CREATE_TASK: {
-      const { values } = action;
+    case ACTION_TYPES.CREATE_TASK_REQUEST: {
       return {
         ...state,
-        tasks: [...state.tasks, { ...values, id: serial++ }],
+        isFetching: true,
       };
     }
-    case ACTION_TYPES.DELETE_TASK: {
-      const { id } = action;
+    case ACTION_TYPES.CREATE_TASK_SUCCESS: {
+      const { data: task } = action;
       const { tasks } = state;
-
-      const newTasks = [...tasks];
-
-      const findIndex = newTasks.findIndex(({ id: taskId }) => id === taskId);
-      console.log(findIndex);
-      newTasks.splice(findIndex, 1);
 
       return {
         ...state,
-        tasks: newTasks,
+        isFetching: false,
+        tasks: [...tasks, task],
+      };
+    }
+    case ACTION_TYPES.CREATE_TASK_ERROR: {
+      const { error } = action;
+      return {
+        ...state,
+        isFetching: false,
+        error,
+      };
+    }
+    case ACTION_TYPES.GET_TASKS_REQUEST: {
+      return {
+        ...state,
+        isFetching: true,
+      };
+    }
+    case ACTION_TYPES.GET_TASKS_SUCCESS: {
+      const { tasks } = state;
+      const {
+        payload: { tasks: newTasks },
+      } = action;
+      return {
+        ...state,
+        isFetching: false,
+        tasks: [...tasks, newTasks],
+      };
+    }
+    case ACTION_TYPES.GET_TASKS_ERROR: {
+      const {
+        payload: { error },
+      } = action;
+      return {
+        ...state,
+        isFetching: false,
+        error,
       };
     }
     case ACTION_TYPES.UPDATE_TASK: {

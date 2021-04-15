@@ -10,8 +10,19 @@ export function * createTask (action) {
       },
     } = yield API.createTask(action.data);
 
-    yield put(TaskActionCreator.createTask)
+    yield put(TaskActionCreator.createTaskSuccess(task));
   } catch (error) {
-    next(error);
+    yield put(TaskActionCreator.createTaskError(error));
+  }
+}
+
+export function * getTasks (action) {
+  try {
+    const {
+      data: { data: tasks },
+    } = yield API.getTasks(action.payload);
+    yield put(TaskActionCreator.getTasksSuccess({ tasks }));
+  } catch (error) {
+    yield put(TaskActionCreator.getTaskError({ error }));
   }
 }

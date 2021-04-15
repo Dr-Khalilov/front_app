@@ -3,10 +3,10 @@ import { Formik, Form, Field } from 'formik';
 import * as TaskActionCreators from '../actions/createTaskActions';
 
 const TaskForm = props => {
-  const { createTask } = props;
+  const { createTaskRequest } = props;
 
   const onSubmit = (values, formikBag) => {
-    createTask(values);
+    createTaskRequest(values);
     formikBag.resetForm();
   };
 
@@ -14,12 +14,15 @@ const TaskForm = props => {
     <Formik
       initialValues={{
         body: '',
+        deadline:'',
         isDone: false,
       }}
       onSubmit={onSubmit}
     >
       <Form>
         <Field name='body' placeholder='task body' />
+        <Field name='deadline' placeholder='deadline'/>
+        <Field name='isDone' placeholder='isDone'/>
         <button type='submit'>Create task</button>
       </Form>
     </Formik>
