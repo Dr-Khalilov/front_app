@@ -3,37 +3,42 @@ import { connect } from 'react-redux';
 import * as TaskActionCreators from '../actions/createTaskActions';
 
 const TaskList = props => {
-  const { tasks, isFetching, error, getTasks, createTask, deleteTask } = props;
+  const { tasks, isFetching, error, getTasksRequest } = props;
 
   useEffect(() => {
-    getTasks({ offset: tasks.length });
+    getTasksRequest({ limit: 5, offset: tasks });
   }, []);
   return (
     <section>
       {isFetching && 'LOADING...'}
       {error && JSON.stringify(error, null, 4)}
-
-      <h1>TASK LIST</h1>
-
+      <h2>TASK LIST</h2>
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
-              <h2>ID: {task.id}</h2>
-              <p>{task.body}</p>
-              <p>{task.deadline}</p>
-              <input
-                type='checkbox'
-                checked={task.isDone}
-                onChange={({ target: { checked } }) => {
-                  const values = { isDone: checked };
-                  createTask({ id: task.id, values });
-                }}
-              />
-            <button onClick={() => deleteTask(task.id)}>Delete task</button>
+            <h3>ID: {task.id}</h3>
+            <p>{task.body}</p>
+            <p>{task.deadline}</p>
+            {/* <input
+              type='checkbox'
+              checked={task.isDone}
+              onChange={({ target: { checked } }) => {
+                const values = { isDone: checked };
+                deleteTask({ id: task.id, values });
+              }}
+            /> */}
+            {/* <button onClick={() => deleteTask(task.id)}>Delete task</button> */}
           </li>
         ))}
       </ul>
-      <button onClick={() => getTasks({ offset: tasks.length })}>
+      <button
+        onClick={() =>
+          TaskActionCreators.getTasksRequest({
+            limit: 5,
+            offset: 0,
+          })
+        }
+      >
         Load more tasks
       </button>
     </section>
@@ -50,8 +55,8 @@ const mapStateToProps = ({ task }) => ({
 // });
 
 const mapDispatchToState = dispatch => ({
-  getTasks: ({ limit, offset } = {}) =>
-    dispatch(TaskActionCreators.getTasksRequest({ limit, offset })),
+  getTasksRequest: ({ limit, offset } = {}) =>
+    dispatch(TaskActionCreators.getTasksRequest({ limit, offset})),
 });
 
 export default connect(mapStateToProps, mapDispatchToState)(TaskList);

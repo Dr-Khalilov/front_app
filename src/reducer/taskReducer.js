@@ -46,7 +46,7 @@ function reducer (state = initialState, action) {
       return {
         ...state,
         isFetching: false,
-        tasks: [...tasks, newTasks],
+        tasks: [...tasks, ...newTasks],
       };
     }
     case ACTION_TYPES.GET_TASKS_ERROR: {
@@ -59,6 +59,8 @@ function reducer (state = initialState, action) {
         error,
       };
     }
+
+    
     case ACTION_TYPES.UPDATE_TASK: {
       const { id, values } = action;
       const { tasks } = state;
